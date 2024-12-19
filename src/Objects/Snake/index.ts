@@ -1,4 +1,4 @@
-import { Mesh, MeshBuilder, Vector3, PointerDragBehavior } from "@babylonjs/core";
+import { Mesh, MeshBuilder, Vector3, PointerDragBehavior, PhysicsAggregate, PhysicsShapeType, PhysicsShape, PhysicsShapeMesh, Scene } from "@babylonjs/core";
 
 export class Snake extends Mesh{
 
@@ -12,15 +12,23 @@ export class Snake extends Mesh{
         this.position = pos || this.position;
 
         for ( let i = 0; i <= this.lenght; i++){
+
+            //сознадие каждого меша
+            // this.meshes[i] = MeshBuilder.CreatePolyhedron("oct", {size: 1, type: 13})
+            this.meshes[i] = MeshBuilder.CreateBox("box"+i, {size: 1})
+            this.meshes[i].position = new Vector3((1 + 1 * i), 2, 1)
+            this.meshes[i].setParent(this);
+
+            //создание управление каждым мешем
             let pointer = new PointerDragBehavior({dragAxis: new Vector3(0,0,0)})
             pointer.useObjectOrientationForDragging = false;
             pointer.detachCameraControls = true
-
-            this.meshes[i] = MeshBuilder.CreatePolyhedron("oct", {size: 1, type: 13})
-            this.meshes[i].position = new Vector3((1 + 1 * i), 2, 1)
-            this.meshes[i].parent = this;
-
             this.meshes[i].addBehavior(pointer)
+
+            //phis
+
+            new PhysicsAggregate(this.meshes[i], PhysicsShapeType.BOX, {mass: 1})
+
         }
     }
 }

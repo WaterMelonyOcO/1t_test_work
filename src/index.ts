@@ -43,20 +43,19 @@ class Main {
     private async createScene() {
 
         // Включение физики
-        // await LoadHavok()
-        // this.scene.enablePhysics(PhysicsProperty.gravity, new HavokPlugin());
+        await LoadHavok()
+        this.scene.enablePhysics(PhysicsProperty.gravity, new HavokPlugin());
 
         //главная сцена
         let light = new HemisphericLight('light1', new Vector3(1,10,10));
         let ground = MeshBuilder.CreateGround('ground1', {width: 20, height: 15});
         ground.visibility = 0.1
-        // let snake = new Snake("Snake1", this.scene, 3, new Vector3(-4, 3, 0));
+        let snake = new Snake("Snake1", this.scene, 3, new Vector3(-4, 3, 0));
         const ui = AdvancedDynamicTexture.CreateFullscreenUI("cusUi")
         ui.addControl(new CustomUI(ui.name, this.scene))
-        // for (let i = 0; i < snake.meshes.length; i++)
-        //     this.scene.addMesh(snake.meshes[i].mesh, true)
+        
 
-        // let groundAggregate = new PhysicsAggregate(ground, PhysicsShapeType.BOX, {mass: 0})
+        let groundAggregate = new PhysicsAggregate(ground, PhysicsShapeType.BOX, {mass: 0})
     }
 }
 

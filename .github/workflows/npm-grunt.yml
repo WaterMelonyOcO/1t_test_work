@@ -32,7 +32,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
+      - name: checkout repo
+        uses: actions/checkout@v3
         with:
-          folder: ./out
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: upload artifacts
+        uses: actions/upload-pages-artifact@v1
+        with: 
+          path: "./out"
+      - name: deploy
+        id: deployment
+        uses: actions/deploy-pages@v1

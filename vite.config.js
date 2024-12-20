@@ -2,7 +2,7 @@ module.exports = {
     root: './src',
     build: {
       outDir: '../out',
-      emptyOutDir: false, // also necessary
+      emptyOutDir: true, // also necessary
       commonjsOptions: {
         include: ["/node_modules/"]
       }

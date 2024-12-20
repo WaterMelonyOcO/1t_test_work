@@ -1,11 +1,10 @@
-import { FreeCamera, HemisphericLight, MeshBuilder, Vector3, ArcRotateCamera, HavokPlugin, CannonJSPlugin } from "@babylonjs/core";
+import { FreeCamera, HemisphericLight, MeshBuilder, Vector3, ArcRotateCamera, HavokPlugin, CannonJSPlugin, PhysicsAggregate, PhysicsShapeType, DebugBlock, PointerDragBehavior, Mesh } from "@babylonjs/core";
 import { MyEngine } from "./core/Engine";
 import { MyScene } from "./core/Scene";
 import { Engine, Scene } from "@babylonjs/core";
 import { Snake } from "./Objects/Snake";
-import HavokPhysics, { } from "@babylonjs/havok"
-import * as Cannon from "cannon"
 import {LoadHavok} from './modules/HavokLoad'
+import { PhysicsProperty } from "./core/Properties";
 
 class Main {
 
@@ -20,8 +19,8 @@ class Main {
         this.scene = scene || new MyScene(this.engine)
 
         //задаю камеру
-        let camera = new ArcRotateCamera('camera1', -Math. PI / 2, Math.PI / 3, 20, new Vector3(-5, 5, -15))
-        // let camera = new FreeCamera("camera1", new Vector3(-5, 5, -10), scene);
+        let camera = new ArcRotateCamera('camera1', -Math. PI / 2, Math.PI / 3, 10, new Vector3(0, 5, -10))
+        // let camera = new FreeCamera("camera1", new Vector3(0, 5, -10), scene);
         camera.attachControl(this.renderCanvas, true);
         
         this.engine.runRenderLoop(()=>{
@@ -41,16 +40,20 @@ class Main {
 
     private async createScene() {
 
+        // Включение физики
         await LoadHavok()
-        this.scene.enablePhysics(new Vector3(0, -0.91,0), new HavokPlugin())
-
+        this.scene.enablePhysics(PhysicsProperty.gravity, new HavokPlugin());
 
         //главная сцена
         let light = new HemisphericLight('light1', new Vector3(1,10,10));
-        let ground = MeshBuilder.CreateGround('ground1', {width: 10, height: 10});
-        let snake = new Snake("Snake1", 4, Vector3.Zero());
+        let ground = MeshBuilder.CreateGround('ground1', {width: 20, height: 15});
+        ground.visibility = 0.1
+        let snake = new Snake("Snake1", this.scene, 3, new Vector3(-4, 3, 0));
 
-        
+        // for (let i = 0; i < snake.meshes.length; i++)
+        //     this.scene.addMesh(snake.meshes[i].mesh, true)
+
+        let groundAggregate = new PhysicsAggregate(ground, PhysicsShapeType.BOX, {mass: 0})
     }
 }
 
